@@ -11,5 +11,8 @@
 		<mapper resource="com/sea/mapper/CurrentMapper.xml" />
 		<mapper resource="com/sea/mapper/HistoryMapper.xml" />
 		<mapper resource="com/sea/mapper/CountTimeMapper.xml" />
+		<mapper resource="com/sea/mapper/UserMapper.xml" />
+		<mapper resource="com/sea/mapper/CpHistoryMapper.xml" />
+		<mapper resource="com/sea/mapper/CpCourrentMapper.xml" />
 	</mappers>
 </configuration>

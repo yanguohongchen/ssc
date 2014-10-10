@@ -18,10 +18,8 @@ public class Main
 		@SuppressWarnings("resource")
 		ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("applicationContext.xml");
 		Ssc ssc = applicationContext.getBean(Ssc.class);
-
 		while (true)
 		{
-
 			try
 			{
 				ssc.catchInfoAndSaveToDB("http://gaopinc.com/KaiJiang/JxSsc.html", "jx");
@@ -36,10 +34,10 @@ public class Main
 			{
 				e.printStackTrace();
 			}
-			
-			//暂停
-			Thread.sleep(1000*60*1);
-			
+
+			// 暂停
+			Thread.sleep(1000 * 60 * 1);
+
 		}
 
 	}
