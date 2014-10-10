@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC 
+	"-//mybatis.org//DTD Config 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<typeAliases>
+	</typeAliases>
+	<mappers>
+		<mapper resource="com/sea/mapper/CqStageMapper.xml" />
+		<mapper resource="com/sea/mapper/JxStageMapper.xml" />
+		<mapper resource="com/sea/mapper/CurrentMapper.xml" />
+		<mapper resource="com/sea/mapper/HistoryMapper.xml" />
+		<mapper resource="com/sea/mapper/CountTimeMapper.xml" />
+	</mappers>
+</configuration>
