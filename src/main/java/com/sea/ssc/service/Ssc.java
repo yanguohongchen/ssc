@@ -57,14 +57,14 @@ public class Ssc
 
 	private DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
-	public void queryStageCountInfo()
+	public void queryStageCountInfo(int cpTypeId)
 	{
 		// 先查詢当前表格，查看当前时间。
-		Current current = currentMapperDao.selectByPrimaryKey(1);
+		Current current = currentMapperDao.selectByPrimaryKey(cpTypeId);
 		if (current == null)
 		{
 			current = new Current();
-			current.setId(1);
+			current.setId(cpTypeId);
 			current.setBb(0);
 			current.setBs(0);
 			current.setSs(0);
@@ -72,10 +72,25 @@ public class Ssc
 			current.setStagetime((long) 0);
 			currentMapperDao.insert(current);
 		}
+		if (cpTypeId == 1)
+		{
+			countCq(cpTypeId);
+		} else
+		{
+			countJx(cpTypeId);
+		}
+	}
+
+	/**
+	 * 循环读取
+	 * @param cpTypeId
+	 */
+	private void countCq(int cpTypeId)
+	{
 		int size = 1;
 		do
 		{
-			current = currentMapperDao.selectByPrimaryKey(1);
+			Current current = currentMapperDao.selectByPrimaryKey(cpTypeId);
 			Map<String, Object> map = new HashMap<>();
 			map.put("start", 0);
 			map.put("end", 1);
@@ -86,39 +101,90 @@ public class Ssc
 			{
 				for (CqStage cqStage : cqStages)
 				{
-					countGroupLongestTimes(cqStage);
+					countCqGroupLongestTimes(cqStage, cpTypeId);
 				}
 			}
-
 		} while (size != 0);
-
 	}
 
-	// 组合定义
-	// 大小，单双，
+	/**
+	 * 循环读取
+	 * @param cpTypeId
+	 */
+	private void countJx(int cpTypeId)
+	{
+		int size = 1;
+		do
+		{
+			Current current = currentMapperDao.selectByPrimaryKey(cpTypeId);
+			Map<String, Object> map = new HashMap<>();
+			map.put("start", 0);
+			map.put("end", 1);
+			map.put("stagetime", current.getStagetime());
+			List<JxStage> JxStages = jxStageMapperDao.getListByPage(map);
+			size = JxStages.size();
+			if (JxStages != null)
+			{
+				for (JxStage jxStage : JxStages)
+				{
+					countJxGroupLongestTimes(jxStage, cpTypeId);
+				}
+			}
+		} while (size != 0);
+	}
 
-	// 计算某种组合历史上最长时间没有出现。
-
-	// 计算某种组合在出现次数。
-
-	// 先判断id为1的数据是否存在。不存在。则插入一条数据，并找到当前最早的数据。进行统计。
-	public void countGroupLongestTimes(CqStage cqStage)
+	/**
+	 * 计算重庆开奖次数
+	 * @param cqStage
+	 * @param cpTypeId
+	 */
+	private void countCqGroupLongestTimes(CqStage cqStage, int cpTypeId)
 	{
 		String stageNum = cqStage.getStagenumber();
-		String[] numArr = stageNum.split(",",Integer.MAX_VALUE);
-		int four = Integer.parseInt(numArr[3].equals("")?"0":numArr[3]);
-		int five = Integer.parseInt(numArr[4].equals("")?"0":numArr[4]);
+		String[] numArr = stageNum.split(",", Integer.MAX_VALUE);
+		int four = Integer.parseInt(numArr[3].equals("") ? "0" : numArr[3]);
+		int five = Integer.parseInt(numArr[4].equals("") ? "0" : numArr[4]);
 
-		Current current = currentMapperDao.selectByPrimaryKey(1);
+		Current current = currentMapperDao.selectByPrimaryKey(cpTypeId);
 		current.setStagetime(cqStage.getStagetime());
 		current.setStageid(cqStage.getId());
-		
-		
-		History history = historyMapperDao.selectByPrimaryKey(1);
+		dealTwoGroup(four, five, current, cpTypeId);
+	}
+
+	/**
+	 * 计算江西开奖次数
+	 * @param jxStage
+	 * @param cpTypeId
+	 */
+	private void countJxGroupLongestTimes(JxStage jxStage, int cpTypeId)
+	{
+		String stageNum = jxStage.getStagenumber();
+		String[] numArr = stageNum.split(",", Integer.MAX_VALUE);
+		int four = Integer.parseInt(numArr[3].equals("") ? "0" : numArr[3]);
+		int five = Integer.parseInt(numArr[4].equals("") ? "0" : numArr[4]);
+
+		Current current = currentMapperDao.selectByPrimaryKey(cpTypeId);
+		current.setStagetime(jxStage.getStagetime());
+		current.setStageid(jxStage.getId());
+		dealTwoGroup(four, five, current, cpTypeId);
+	}
+
+	/**
+	 * 处理后俩位组合
+	 * 
+	 * @param four
+	 * @param five
+	 * @param current
+	 * @param history
+	 */
+	private void dealTwoGroup(int four, int five, Current current, int cpTypeId)
+	{
+
+		History history = historyMapperDao.selectByPrimaryKey(cpTypeId);
 		if (history == null)
 		{
 			history = new History();
-			history.setId(1);
+			history.setId(cpTypeId);
 			history.setBb(0);
 			history.setBs(0);
 			history.setSs(0);
@@ -127,7 +193,7 @@ public class Ssc
 		}
 
 		CountTime countTime = new CountTime();
-		countTime.setCptype("cq");
+		countTime.setCptype(cpTypeId);
 
 		// 计算大小组合
 		int key = countTwoSmallAndBigGroup(four, five);
@@ -188,17 +254,6 @@ public class Ssc
 		currentMapperDao.updateByPrimaryKeySelective(current);
 		historyMapperDao.updateByPrimaryKeySelective(history);
 		countTimeMapperDao.insert(countTime);
-		// 当前表
-		// 字段
-		// 该次时间，大小(当前，历史)，大大(当前，历史)，小大(当前，历史)，小小(当前，历史) ...
-		// 201406051623 1,2 1,2 1,2 1,2
-
-		// 次数统计表。
-		// 字段
-		// 组合类型，次数，彩票类型。
-
-		// 报表。
-
 	}
 
 	/**

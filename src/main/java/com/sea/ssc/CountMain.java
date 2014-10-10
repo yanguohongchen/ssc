@@ -9,7 +9,7 @@ public class CountMain
 {
 
 	
-	public static void main(String[] args)
+	public static void main(String[] args) throws InterruptedException
 	{
 
 		
@@ -17,7 +17,18 @@ public class CountMain
 		@SuppressWarnings("resource")
 		ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("applicationContext.xml");
 		Ssc ssc = applicationContext.getBean(Ssc.class);
-		ssc.queryStageCountInfo();
+		
+//		while(true)
+//		{
+			long start = System.currentTimeMillis();
+			ssc.queryStageCountInfo(1);
+			ssc.queryStageCountInfo(2);
+			long end = System.currentTimeMillis();
+			System.out.println(end-start);
+//			Thread.sleep(1000*60*1);
+//		}
+		
+		
 	
 	}
 	

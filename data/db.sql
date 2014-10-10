@@ -50,7 +50,7 @@ create table t_history
 
 create table t_count_time
 (
-	cpType varchar(255) comment "彩票类型",
+	cpType int comment "彩票类型",
 	grouptype int comment "组合类型",
 	times int comment "次数"
 )comment "次数统计表";
