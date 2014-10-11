@@ -141,11 +141,21 @@ public class Ssc
 	private void countCqGroupLongestTimes(CqStage cqStage, int cpTypeId)
 	{
 		String stageNum = cqStage.getStagenumber();
+<<<<<<< HEAD
+=======
+		String[] numArr = stageNum.split(",", Integer.MAX_VALUE);
+		int four = Integer.parseInt(numArr[3].equals("") ? "0" : numArr[3]);
+		int five = Integer.parseInt(numArr[4].equals("") ? "0" : numArr[4]);
+>>>>>>> 9189bfa903b8bae49f7d2d85b2595ded6a784441
 
 		Current current = currentMapperDao.selectByPrimaryKey(cpTypeId);
 		current.setStagetime(cqStage.getStagetime());
 		current.setStageid(cqStage.getId());
+<<<<<<< HEAD
 		dealTwoGroup(stageNum, current, cpTypeId);
+=======
+		dealTwoGroup(four, five, current, cpTypeId);
+>>>>>>> 9189bfa903b8bae49f7d2d85b2595ded6a784441
 	}
 
 	/**
@@ -156,12 +166,22 @@ public class Ssc
 	private void countJxGroupLongestTimes(JxStage jxStage, int cpTypeId)
 	{
 		String stageNum = jxStage.getStagenumber();
+<<<<<<< HEAD
 		
+=======
+		String[] numArr = stageNum.split(",", Integer.MAX_VALUE);
+		int four = Integer.parseInt(numArr[3].equals("") ? "0" : numArr[3]);
+		int five = Integer.parseInt(numArr[4].equals("") ? "0" : numArr[4]);
+>>>>>>> 9189bfa903b8bae49f7d2d85b2595ded6a784441
 
 		Current current = currentMapperDao.selectByPrimaryKey(cpTypeId);
 		current.setStagetime(jxStage.getStagetime());
 		current.setStageid(jxStage.getId());
+<<<<<<< HEAD
 		dealTwoGroup(stageNum, current, cpTypeId);
+=======
+		dealTwoGroup(four, five, current, cpTypeId);
+>>>>>>> 9189bfa903b8bae49f7d2d85b2595ded6a784441
 	}
 
 	/**
@@ -172,7 +192,11 @@ public class Ssc
 	 * @param current
 	 * @param history
 	 */
+<<<<<<< HEAD
 	private void dealTwoGroup(String stageNum, Current current, int cpTypeId)
+=======
+	private void dealTwoGroup(int four, int five, Current current, int cpTypeId)
+>>>>>>> 9189bfa903b8bae49f7d2d85b2595ded6a784441
 	{
 
 		History history = historyMapperDao.selectByPrimaryKey(cpTypeId);
